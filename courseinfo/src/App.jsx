@@ -64,15 +64,9 @@ const Content = ({ parts }) => {
 
 const Total = ({parts}) => {
   
-  function exercises(){
-    let sum = 0
-    parts.map(
-      part => sum+=part.exercises
-    )
-    return sum
-  } 
+  const total = parts.reduce((sum, currentValue)=> sum+currentValue.exercises, 0)
   return (
-    <p>Number of exercises {exercises()}</p>
+    <p>Number of exercises {total}</p>
   )
 }
 

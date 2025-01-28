@@ -3,6 +3,7 @@ import axios from 'axios'
 import Filter from './components/SearchFilter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import PersonsServices from './services/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,14 +11,12 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
 
-  useEffect(()=> {
-    axios
-    .get('http://localhost:3001/persons')
-    .then((response)=>{
-      setPersons(response.data)
-    })
+  useEffect(() => {
+    PersonsServices
+      .getAll()
+      .then(persons => setPersons(persons))
   }, [])
-  
+
   const handleNewNumber = (event) => {
     setNewNumber(event.target.value)
   }
@@ -40,10 +39,10 @@ const App = () => {
       window.alert(`${newName} is already added to the phonebook`)
     }
     else {
-      axios
-        .post('http://localhost:3001/persons', newPerson)
-        .then(response => setPersons(persons.concat(response.data)))
-      
+      PersonsServices
+        .addPerson(newPerson)
+        .then(setPersons(persons.concat(newPerson)))
+        .catch(error =>  `${newPerson} could not be added at this time`)
       setNewName('')
       setNewNumber('')
     }
@@ -58,7 +57,7 @@ const App = () => {
       <PersonForm submitHandler={handleSubmit} name={newName} newNameHandler={handleNewName}
         number={newNumber} newNumberHandler={handleNewNumber} />
       <h2>Numbers</h2>
-      <Persons persons={persons} newFilter={newFilter}/>
+      <Persons persons={persons} newFilter={newFilter} />
     </div>
   )
 }

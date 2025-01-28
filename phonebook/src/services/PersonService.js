@@ -18,4 +18,8 @@ const addPerson = (newPerson) => {
     )
 }
 
+const deletePerson = (id) =>{
+    axios.delete(`${url}/${id}`)
+}
+
 export default {getAll, addPerson}

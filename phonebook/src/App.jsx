@@ -3,7 +3,7 @@ import axios from 'axios'
 import Filter from './components/SearchFilter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import PersonsServices from './services/Persons'
+import PersonServices from './services/PersonService'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,7 +12,7 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
 
   useEffect(() => {
-    PersonsServices
+    PersonServices
       .getAll()
       .then(persons => setPersons(persons))
   }, [])
@@ -39,10 +39,10 @@ const App = () => {
       window.alert(`${newName} is already added to the phonebook`)
     }
     else {
-      PersonsServices
+      PersonServices
         .addPerson(newPerson)
         .then(setPersons(persons.concat(newPerson)))
-        .catch(error =>  `${newPerson} could not be added at this time`)
+        .catch(error => `${newPerson} could not be added at this time`)
       setNewName('')
       setNewNumber('')
     }

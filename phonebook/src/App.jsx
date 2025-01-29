@@ -41,19 +41,19 @@ const App = () => {
     else {
       PersonServices
         .addPerson(newPerson)
-        .then(setPersons(persons.concat(newPerson)))
-        .catch(error => `${newPerson} could not be added at this time`)
+        .then(person => setPersons(persons.concat(person)))
+        .catch(error => `${error} ${newPerson.name} could not be added at this time`)
       setNewName('')
       setNewNumber('')
     }
   }
+
+
   const deleteHandler = (event) => {
     const confirmDel = window.confirm(`Delete ${event.target.dataset.name}?`)
     if (confirmDel) {
-      PersonServices
-        .deletePerson(event.target.dataset.key)
-        .then()
-        
+      PersonServices.deletePerson(event.target.dataset.key)
+      setPersons(persons.filter((person) => person.name != event.target.dataset.name))
     }
   }
 

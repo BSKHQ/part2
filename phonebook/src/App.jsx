@@ -47,6 +47,15 @@ const App = () => {
       setNewNumber('')
     }
   }
+  const deleteHandler = (event) => {
+    const confirmDel = window.confirm(`Delete ${event.target.dataset.name}?`)
+    if (confirmDel) {
+      PersonServices
+        .deletePerson(event.target.dataset.key)
+        .then()
+        
+    }
+  }
 
   return (
     <div>
@@ -57,7 +66,7 @@ const App = () => {
       <PersonForm submitHandler={handleSubmit} name={newName} newNameHandler={handleNewName}
         number={newNumber} newNumberHandler={handleNewNumber} />
       <h2>Numbers</h2>
-      <Persons persons={persons} newFilter={newFilter} />
+      <Persons persons={persons} newFilter={newFilter} handleDelete={deleteHandler} />
     </div>
   )
 }

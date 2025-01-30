@@ -25,17 +25,29 @@ const deletePerson = (id) => {
 }
 
 const replace = (person) => {
-    const id = getId(person)
-    axios
-        .put(`${url}/${id}`, {...person, id:id})
-        .then(response => console.log(response.data))
+    return (
+        getId(person).then(p => {
+            return (
+                axios
+                    .put(`${url}/${p.id}`, { ...person, id: p.id })
+                    .then(r => {
+                        return (getAll())
+                    }
+                    )
+            )
+
+        })
+    )
+
+
 }
 
 const getId = (person) => {
     return (
-        getAll()
-            .then(persons => persons.find(({ name }) => name === person.name))
-            .id
+        getAll().then(persons => {
+            const p = persons.find(({ name }) => name.toLowerCase() === person.name.toLowerCase())
+            return p
+        })
     )
 }
 

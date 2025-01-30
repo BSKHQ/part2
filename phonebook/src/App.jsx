@@ -31,12 +31,21 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const newPerson = { name: newName, number: newNumber }
+    const newPerson = { name: newName.trim(), number: newNumber.trim() }
 
     if (persons.find(
       ({ name }) =>
-        name.trim().toLowerCase() === newName.trim().toLowerCase()) && window.confirm(`${newName.trim()} is already added to the phonebook, replace the old number with a new one?`)) {
-          PersonServices.replace(newPerson)
+        name.toLowerCase() === newName.trim().toLowerCase())) {
+      if (window.confirm(`${newName.trim()} is already added to the phonebook, replace the old number with a new one?`)) {
+        PersonServices
+          .replace(newPerson)
+          .then(p => {
+            setPersons(p)
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+      return
     }
     else {
       PersonServices

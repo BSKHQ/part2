@@ -35,8 +35,8 @@ const App = () => {
 
     if (persons.find(
       ({ name }) =>
-        name === newName)) {
-      window.alert(`${newName} is already added to the phonebook`)
+        name.trim().toLowerCase() === newName.trim().toLowerCase()) && window.confirm(`${newName.trim()} is already added to the phonebook, replace the old number with a new one?`)) {
+          PersonServices.replace(newPerson)
     }
     else {
       PersonServices

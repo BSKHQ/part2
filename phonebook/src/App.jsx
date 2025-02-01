@@ -19,19 +19,24 @@ const App = () => {
       .then(persons => setPersons(persons))
   }, [])
 
-  const handleNewNumber = (event) => {
+  function handleNewNumber(event) {
     setNewNumber(event.target.value)
   }
 
-  const handleNewName = (event) => {
+  function handleNewName(event) {
     setNewName(event.target.value)
   }
 
-  const handleNewFilter = (event) => {
+  function handleNewFilter(event) {
     setNewFilter(event.target.value)
   }
 
-  const handleSubmit = (event) => {
+  function notif(code, name) {
+    setNotification([code, name])
+    setTimeout(() => setNotification([]), 3000)
+  }
+
+  function handleSubmit(event) {
     event.preventDefault()
     const newPerson = { name: newName.trim(), number: newNumber.trim() }
 
@@ -43,11 +48,11 @@ const App = () => {
           .replace(newPerson)
           .then(p => {
             setPersons(p)
-            setNotification(['c', newPerson.name])
-            setTimeout(()=>setNotification([]), 3000)
+            notif('c', newPerson.name)
             setNewName('')
             setNewNumber('')
           })
+          .catch(error => notif('e', newPerson.name))
       }
       return
     }
@@ -56,8 +61,7 @@ const App = () => {
         .addPerson(newPerson)
         .then(person => {
           setPersons(persons.concat(person))
-          setNotification(['a', person.name])
-          setTimeout(()=>setNotification([]), 3000)
+          notif('a', person.name)
         })
         .catch(error => `${error} ${newPerson.name} could not be added at this time`)
       setNewName('')
@@ -66,15 +70,22 @@ const App = () => {
   }
 
 
-  const deleteHandler = (event) => {
+  function deleteHandler(event) {
     const confirmDel = window.confirm(`Delete ${event.target.dataset.name}?`)
     if (confirmDel) {
-      PersonServices.deletePerson(event.target.dataset.key)
-      setPersons(persons.filter((person) => person.name != event.target.dataset.name))
-      setNotification(['d', event.target.dataset.name])
-      setTimeout(()=>setNotification([]), 3000)
+      PersonServices
+        .deletePerson(event.target.dataset.key)
+        .then(response => {
+          notif('d', event.target.dataset.name)
+        })
+        .catch(error => notif('e', event.target.dataset.name))
+        setPersons(persons.filter((person) => person.name != event.target.dataset.name))
     }
+
+
+    notif('d', event.target.dataset.name)
   }
+
 
   return (
     <div>

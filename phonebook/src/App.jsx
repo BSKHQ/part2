@@ -4,12 +4,14 @@ import Filter from './components/SearchFilter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import PersonServices from './services/PersonService'
+import Notify from './components/Notify'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [notification, setNotification] = useState([])
 
   useEffect(() => {
     PersonServices
@@ -41,6 +43,8 @@ const App = () => {
           .replace(newPerson)
           .then(p => {
             setPersons(p)
+            setNotification(['c', newPerson.name])
+            setTimeout(()=>setNotification([]), 3000)
             setNewName('')
             setNewNumber('')
           })
@@ -50,7 +54,11 @@ const App = () => {
     else {
       PersonServices
         .addPerson(newPerson)
-        .then(person => setPersons(persons.concat(person)))
+        .then(person => {
+          setPersons(persons.concat(person))
+          setNotification(['a', person.name])
+          setTimeout(()=>setNotification([]), 3000)
+        })
         .catch(error => `${error} ${newPerson.name} could not be added at this time`)
       setNewName('')
       setNewNumber('')
@@ -63,14 +71,16 @@ const App = () => {
     if (confirmDel) {
       PersonServices.deletePerson(event.target.dataset.key)
       setPersons(persons.filter((person) => person.name != event.target.dataset.name))
+      setNotification(['d', event.target.dataset.name])
+      setTimeout(()=>setNotification([]), 3000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notify code={notification[0]} name={notification[1]} />
       <Filter filterState={newFilter} eventHandler={handleNewFilter} />
-
       <h2>Add a new</h2>
       <PersonForm submitHandler={handleSubmit} name={newName} newNameHandler={handleNewName}
         number={newNumber} newNumberHandler={handleNewNumber} />

@@ -32,6 +32,12 @@ const App = () => {
     }
   }
 
+  function handleButtonClick(event){
+    const countryname = event.target.dataset.key
+    setCountry(countryname)
+    setFiltered([])
+  }
+
   useEffect(() => {
     if (countries.length == 0) { //runs once only
       countryservices
@@ -67,7 +73,7 @@ const App = () => {
       <form onSubmit={(event) => event.target.preventDefault()}>
         find countries <input value={value} onChange={handleInputChange} />
       </form>
-      <CountryInfo data={countryData} filteredCountries={filtered} />
+      <CountryInfo data={countryData} filteredCountries={filtered} handleClick={handleButtonClick}/>
       <Notification message={errorMsg} />
     </div>
   )

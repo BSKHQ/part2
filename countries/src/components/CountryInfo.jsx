@@ -1,4 +1,4 @@
-const CountryInfo = ({ data, filteredCountries }) => {
+const CountryInfo = ({ data, filteredCountries, handleClick }) => {
     if (filteredCountries.length > 10) {
         return (
             <div>Too many matches, specify another filter</div>
@@ -26,7 +26,12 @@ const CountryInfo = ({ data, filteredCountries }) => {
     } else {
         return (
             <>
-                {filteredCountries.map(c => <div>{c}</div>)}
+                {filteredCountries.map(c => <div>{c}
+                    <button
+                        key={c}
+                        data-key={c}
+                        onClick={handleClick}>show
+                    </button></div>)}
             </>
         )
     }

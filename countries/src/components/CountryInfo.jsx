@@ -21,12 +21,19 @@ const CountryInfo = ({ data, filteredCountries, handleClick }) => {
                 </ul>
 
                 <img src={data['flags']['png']} />
+
+                <h2>Weather in {data['capital']}</h2>
+                <p>temperature {data['weatherdata']["main"]["temp"]} Celcius</p>
+               
+                <img src={`https://openweathermap.org/img/wn/${data['weatherdata']['weather']['0']['icon']}@2x.png`} />
+                <p>wind {data['weatherdata']["wind"]["speed"]} m/s</p>
+                
             </div>
         )
     } else {
         return (
             <>
-                {filteredCountries.map(c => <div>{c}
+                {filteredCountries.map(c => <div key={c}>{c}
                     <button
                         key={c}
                         data-key={c}

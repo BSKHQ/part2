@@ -4,6 +4,7 @@ import countryservices from './services/countryservices.js'
 import Notification from './components/Notification.jsx'
 
 
+
 const App = () => {
 
   const [value, setValue] = useState('') //what's typed in the form
@@ -11,7 +12,7 @@ const App = () => {
   const [countries, setCountries] = useState([]) //
   const [filtered, setFiltered] = useState([]) //countries to display while typing
   const [countryData, setCountryData] = useState(null)
-  const [errorMsg, setErrorMsg] = useState()
+  const [msg, setMsg] = useState()
 
   function handleInputChange(event) {
     setValue(event.target.value)
@@ -32,7 +33,7 @@ const App = () => {
     }
   }
 
-  function handleButtonClick(event){
+  function handleButtonClick(event) {
     const countryname = event.target.dataset.key
     setCountry(countryname)
     setFiltered([])
@@ -46,8 +47,8 @@ const App = () => {
           setCountries(data.map(obj => obj['name']['common']))
         })
         .catch(error => {
-          setErrorMsg('could not get countries: NETWORK ERROR')
-          setTimeout(setErrorMsg(null), 4000)
+          setMsg('could not get countries: NETWORK ERROR')
+          setTimeout(setMsg(null), 4000)
         })
     }
 
@@ -55,11 +56,16 @@ const App = () => {
       countryservices
         .getCountry(country)
         .then(data => {
-          setCountryData(data)
+          countryservices
+            .getWeather(data['capital'])
+            .then(weatherdata => {
+              const newdata = { ...data, weatherdata }
+              setCountryData(newdata)
+            })
         })
         .catch(error => {
-          setErrorMsg('could not get country data: NETWORK ERROR')
-          setTimeout(setErrorMsg(null), 4000)
+          setMsg('could not get country data: NETWORK ERROR')
+          setTimeout(setMsg(null), 4000)
         })
     } else {
       setCountryData(null)
@@ -73,8 +79,8 @@ const App = () => {
       <form onSubmit={(event) => event.target.preventDefault()}>
         find countries <input value={value} onChange={handleInputChange} />
       </form>
-      <CountryInfo data={countryData} filteredCountries={filtered} handleClick={handleButtonClick}/>
-      <Notification message={errorMsg} />
+      <CountryInfo data={countryData} filteredCountries={filtered} handleClick={handleButtonClick} />
+      <Notification message={msg} />
     </div>
   )
 }

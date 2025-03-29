@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const url = 'http://localhost:3001/persons'
+const baseUrl = 'http://localhost:3001/api/persons'
 
 const getAll = () => {
     return (
         axios
-            .get(url)
+            .get(baseUrl)
             .then(response => response.data)
     )
 }
@@ -13,14 +13,14 @@ const getAll = () => {
 const addPerson = (newPerson) => {
     return (
         axios
-            .post(url, newPerson)
+            .post(baseUrl, newPerson)
             .then(response => response.data)
     )
 }
 
 const deletePerson = (id) => {
     return (
-        axios.delete(`${url}/${id}`)
+        axios.delete(`${baseUrl}/${id}`)
     )
 }
 
@@ -29,7 +29,7 @@ const replace = (person) => {
         getId(person).then(p => {
             return (
                 axios
-                    .put(`${url}/${p.id}`, { ...person, id: p.id })
+                    .put(`${baseUrl}/${p.id}`, { ...person, id: p.id })
                     .then(r => {
                         return (getAll())
                     }
